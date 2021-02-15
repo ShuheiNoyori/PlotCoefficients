@@ -10,8 +10,6 @@ plt.rcParams['axes.axisbelow'] = True
 # Functions
 ##############################################
 def barplot(x0, x1, y, height):
-    global modelname
-    global plotcolor
     if x0 > x1:
         raise Exception('X1 must be equal to or more than X0')
     if x0*x1 > 0:
