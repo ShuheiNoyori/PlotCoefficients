@@ -20,14 +20,18 @@ def barplot(x0, x1, y, height):
     else:
         plt.barh(y, x1-x0, left=x0, height=height, color = 'tab:gray')
 
-def coefbarplot(df, lower, upper):
+def coefbarplot(df, lower, upper, center=0):
     plt.figure(figsize = (6, 4))
 
     for i, cil, ciu in zip(range(len(df.index)), df[lower], df[upper]):
         barplot(cil, ciu, i, 0.4)
-   
-    plt.vlines(0, -1, len(df.index), color='black', linestyles='dotted', linewidth=1)
+
+    width_half = max(abs(df[lower].min()), abs(df[upper].max()))
+    width_half *= 1.1
+
+    plt.vlines(center, -1, len(df.index), color='black', linestyles='dotted', linewidth=1)
     plt.ylim(len(df.index), -1)
+    plt.xlim(center-width_half, center+width_half)
     plt.grid()
     plt.yticks(range(len(df.index)), df.index)
     plt.xlabel('Coefficient (95% confidence interval)')
