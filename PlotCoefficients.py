@@ -20,35 +20,31 @@ def barplot(x0, x1, y, height):
     else:
         plt.barh(y, x1-x0, left=x0, height=height, color = 'tab:gray')
 
-def coefbarplot(df):
+def coefbarplot(df, lower, upper):
     plt.figure(figsize = (6, 4))
-    
-    for i, cil, ciu in zip(range(len(df.index)), df['CIlower'], df['CIUpper']):
+
+    for i, cil, ciu in zip(range(len(df.index)), df[lower], df[upper]):
         barplot(cil, ciu, i, 0.4)
-    
+   
     plt.vlines(0, -1, len(df.index), color='black', linestyles='dotted', linewidth=1)
     plt.ylim(len(df.index), -1)
     plt.grid()
     plt.yticks(range(len(df.index)), df.index)
     plt.xlabel('Coefficient (95% confidence interval)')
     plt.ylabel('Parameter')
-    
+
 ##############################################
 # Main
 ##############################################
 # Read data
-path_to_file = 'path_to_file'
-filename = 'filename.csv'
+path_to_file = './'
+filename = 'sampledata.csv'
 
 df = pd.read_csv(os.path.join(path_to_file, filename),
                  index_col = 0,
                  encoding = 'SHIFT-JIS')
 
-# 95% confidence interval (Estimate: Estimated coefficient, Std. Error: Standard error)
-df['CIlower'] = df['Estimate'] - 1.96*df['Std. Error']
-df['CIUpper'] = df['Estimate'] + 1.96*df['Std. Error']
-
-coefbarplot(df)
+coefbarplot(df, lower='95%lower', upper='95%upper')
 plt.savefig(os.path.join(path_to_file, 'plot_{}.png'.format(filename[:-4])),
             dpi=600,
             bbox_inches='tight')
